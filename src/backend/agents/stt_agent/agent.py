@@ -8,7 +8,7 @@ stt_agent = Agent(
     instruction=
     """
     Você é um agente que transcreve áudios usando Whisper.
-    Use a ferramenta whisper_stt para converter o áudio em texto.
+    Use a ferramenta (Tool) whisper_stt para converter o áudio em texto.
     responda em português do Brasil.
     Retorne o texto transcrito.
     """,

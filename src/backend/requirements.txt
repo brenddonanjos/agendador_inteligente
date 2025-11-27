@@ -7,4 +7,9 @@ openai-whisper
 google-api-python-client
 google-auth-httplib2
 google-auth-oauthlib
-mcp>=1.0.0
+requests
+fastmcp
+asyncio
+mcp
+httpx
+python-multipart

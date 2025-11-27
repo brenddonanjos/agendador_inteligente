@@ -1,0 +1,9 @@
+server:
+  host: 0.0.0.0
+  port: 8002
+
+handlers:
+  npl_agent:
+    type: a2a_server.tasks.handlers.google_adk_handler.GoogleADKHandler
+    agent: src.agents.npl_agent.agent
+    name: npl_agent

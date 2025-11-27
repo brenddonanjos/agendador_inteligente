@@ -1,0 +1,26 @@
+{
+  "type": "consulta médica",
+  "name": "Check-up Anual com Dr. House",
+  "description": "Exames de rotina e avaliação geral de saúde.",
+  "date": "2025-10-25",
+  "time": "14:00:00",
+  "target": {
+    "name": "Gregory Chandler",
+    "type": "médico",
+    "description": "Especialista em nefrologia e doenças infecciosas."
+  },
+  "location": "Rua dos Bobos, nº 0 - Consultório 101",
+  "suggestion": "Dica: Para seu check-up com Dr. House, lembre-se de levar seus exames anteriores e uma lista de medicamentos que está tomando. Como ele é especialista em nefrologia, considere fazer jejum de 12h se houver solicitação de exames laboratoriais. Chegue 15 minutos antes para evitar atrasos!"
+}
+
+
+
+{"type":"consulta médica","name":"Check-up Anual com Dr. House","description":"Exames de rotina e avaliação geral de saúde.","date":"2025-10-25","time":"14:00:00","target":{"name":"Gregory Chandler","type":"médico","description":"Especialista em nefrologia e doenças infecciosas."},"location":"Rua dos Bobos, nº 0 - Consultório 101","suggestion":"Dica: Para seu check-up com Dr. House, lembre-se de levar seus exames anteriores e uma lista de medicamentos que está tomando. Como ele é especialista em nefrologia, considere fazer jejum de 12h se houver solicitação de exames laboratoriais. Chegue 15 minutos antes para evitar atrasos!"}
+
+
+
+Crie um evento pra mim, do tipo: Consulta médica, com o título "Check-up Anual com Dr. House" e descrição "Exames de rotina e avaliação geral de saúde.". O evento ocorrerá na data 2025-10-25 às 14h na Rua dos bobos número zero, consultório 101 em Vitória da conquista bahia. Minha sugestão é: Para seu check-up com Dr. House, lembre-se de levar seus exames anteriores. O alvo é o Dr. Gregory House, médico Especialista em nefrologia e doenças infecciosas.
+
+
+
+{"type":"aniversário","name":"Aniversário da Larissa","description":"aniversário","date":"2025-08-17","time":"12:00","target":{"name":"Larissa","type":"aniversariante","description":"Ela é uma mulher de negócios, extrovertida e bem-humorada."},"location":"","suggestion":"Considerando que a Larissa é uma mulher de negócios extrovertida e bem-humorada, que tal presenteá-la com um livro sobre liderança e gestão com uma pitada de humor ou um acessório de escritório moderno e divertido? "}

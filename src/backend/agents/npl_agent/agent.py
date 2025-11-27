@@ -1,4 +1,5 @@
 from google.adk.agents.llm_agent import Agent
+# from google.adk.agents import AgentServer
 from pydantic import BaseModel, Field
 
 class TargetModel(BaseModel):
@@ -26,8 +27,12 @@ npl_agent = Agent(
     Você monta um objeto json com as informações extraídas.
     Você vai extrair os seguintes campos:
     - tipo de compromisso (consulta médica, reunião, aniversário, etc)
-    - data (caso tenha a data) do evento
-    - horário (caso tenha o horário) do evento
+    - data (caso tenha a data) do evento 
+        - Converta a data para o formato YYYY-MM-DD.
+        - Caso a data não tenha o ano, você deve adicionar o ano atual (2025).
+    - horário (caso tenha o horário) do evento 
+        - Caso não tenha o horário, você deve adicionar o horário atual.
+        - Converta o horário para o formato HH:MM.
     - informações da pessoa alvo participante/aniversariante/empresa (caso tenha o nome, descrição)
         As informações da pessoa alvo "target" serão: 
         name - o nome da pessoa alvo, 
@@ -35,6 +40,7 @@ npl_agent = Agent(
         description - a descrição da pessoa alvo, por exemplo características do aniversariante ou da empresa.
     - local do evento (caso tenha o local)
     - descrição do evento (caso tenha a descrição).
+
     Essa regra é muito importante. Você não deve retornar nenhum outro texto além do objeto json, a única coisa que pode ser retornada é o objeto json.
 
     """,
@@ -42,4 +48,8 @@ npl_agent = Agent(
     output_key="event_model"
 )
 
+# if __name__ == "__main__":
+#     print("Iniciando o servidor do npl_agent na porta 8080...")
+#     server = AgentServer(agent=npl_agent, port=8080)
+#     server.run()
 root_agent = npl_agent
