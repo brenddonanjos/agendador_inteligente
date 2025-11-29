@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000";
+const API_URL = "http://scheduler-backend:5000";
 
 export const sendAudioToSchedule = async (audioBlob: Blob) => {
   const formData = new FormData();

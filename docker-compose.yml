@@ -1,0 +1,35 @@
+services:
+  scheduler-backend:
+    build:
+      context: ./src/backend
+      dockerfile: Dockerfile
+    hostname: scheduler-backend
+    container_name: scheduler- backend
+    ports:
+      - 5000:5000
+    networks:
+      - scheduler-net
+    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "5000", "--reload"]
+
+
+  scheduler-frontend:
+    build:
+      context: ./src/frontend
+      dockerfile: Dockerfile
+    hostname: scheduler-frontend
+    container_name: scheduler-frontend
+    depends_on:
+      - scheduler-backend
+    ports:
+      - 5173:5173
+    networks:
+      - scheduler-net
+    volumes:
+      - ./src/frontend:/app
+      - /app/node_modules
+    command: ["npm", "run", "dev", "--", "--host", "0.0.0.0", "--port", "5173"]
+
+networks:
+  scheduler-net:
+    name: scheduler-net
+    driver: bridge
