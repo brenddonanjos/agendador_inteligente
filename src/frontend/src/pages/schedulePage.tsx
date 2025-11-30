@@ -1,7 +1,9 @@
 import { Flex } from "antd";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AudioRecorderButton from "../components/btnAudioRecorder";
 import { sendAudioToSchedule } from "../services/scheduleService";
+import { getAuthStatus, getAuthUrl } from "../services/googleAuthService";
+import { getCookie, setCookie } from "../utils/cookies";
 
 function SchedulePage() {
   const [isRecording, setIsRecording] = useState(false);
@@ -15,6 +17,30 @@ function SchedulePage() {
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
+
+  useEffect(() => {
+    let userSessionId = getCookie("user_id");
+    if (!userSessionId) {
+      userSessionId = crypto.randomUUID();
+      setCookie("user_id", userSessionId, 30);
+    }
+    const checkGoogleAuth = async () => {
+      try {
+        const authStatus = await getAuthStatus(userSessionId);
+        if (!authStatus.authenticated) {
+          const url = await getAuthUrl(userSessionId);
+          window.open(
+            url.auth_url,
+            "google-auth",
+            "width=500,height=600,scrollbars=yes,resizable=yes"
+          );
+        }
+      } catch (error) {
+        console.error("Erro ao verificar autenticação Google:", error);
+      }
+    };
+    checkGoogleAuth();
+  }, []);
 
   const startRecording = async () => {
     setAudioState("recording");
@@ -50,13 +76,15 @@ function SchedulePage() {
 
   const stopRecording = () => {
     if (
-      mediaRecorderRef.current &&
-      mediaRecorderRef.current.state !== "inactive"
-    ) {
-      mediaRecorderRef.current.stop();
-      setIsRecording(false);
-      setAudioState("recorded");
-    }
+      !isRecording ||
+      !mediaRecorderRef.current ||
+      mediaRecorderRef.current.state == "inactive"
+    )
+      return;
+
+    mediaRecorderRef.current.stop();
+    setIsRecording(false);
+    setAudioState("recorded");
   };
 
   const sendAudio = async () => {
@@ -80,6 +108,11 @@ function SchedulePage() {
     setAudioState("idle");
     setIsRecording(false);
     setRecordingTime(0);
+    setAudioURL(null);
+    setAudioBlob(null);
+    mediaRecorderRef.current?.stop();
+    mediaRecorderRef.current = null;
+    chunksRef.current = [];
   };
 
   return (
@@ -90,18 +123,10 @@ function SchedulePage() {
         onSendAudio={sendAudio}
         onCancelRecording={cancelRecording}
         audioState={audioState}
+        audioURL={audioURL}
         recordingTime={recordingTime}
         isRecording={isRecording}
       />
-      <br />
-      {audioURL && (
-        <div style={{ marginTop: "20px" }}>
-          <h3>Áudio Gravado:</h3>
-          <audio controls src={audioURL} />
-          <br />
-          <button onClick={() => sendAudio()}> Enviar Áudio</button>
-        </div>
-      )}
     </Flex>
   );
 }

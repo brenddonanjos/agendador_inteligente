@@ -54,7 +54,7 @@ def create_event(event_details: dict[str, Any]) -> dict:
             return {"error": f"Erro ao criar evento: {error_msg}"}
 
 def setup_auth():
-    """Executa apenas a autenticação para gerar o token.json"""
+    """Executa apenas a autenticação para gerar o token"""
     print("Iniciando autenticação com Google Calendar...")
     print("O navegador será aberto em instantes...")
     try:

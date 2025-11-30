@@ -8,9 +8,13 @@
   /* Remove position: relative */
 }
 
+/* BOTÃO DE GRAVAÇÃO E ENVIO*/
 .futuristic-record-button {
+  width: 6rem !important;
+  height: 6rem !important;
+  font-size: 1.6rem;
   position: relative;
-  border: none !important;
+  border: transparent !important;
   transition: all 0.3s ease-in-out;
   overflow: hidden;
 }
@@ -29,23 +33,34 @@
   box-shadow: 0 0 40px rgba(255, 77, 79, 0.8), 0 0 80px rgba(255, 77, 79, 0.6) !important;
 }
 
-/* Animação de pulse quando gravando */
-@keyframes pulse-recording {
-  0% {
-    transform: scale(1);
-    box-shadow: 0 0 15px rgba(255, 77, 79, 0.4), 0 0 30px rgba(255, 77, 79, 0.2);
+.futuristic-record-button.cancel-button {
+  background: linear-gradient(135deg, #5d656d, #5d656d) !important;
+  box-shadow: 0 0 15px rgba(93, 101, 109, 0.4), 0 0 30px rgba(93, 101, 109, 0.2) !important;
+}
+
+.recorded-audio-buttons-container {
+  display: flex;
+  gap: 2rem;
+}
+/* Esconder botão mobile em telas grandes e botão desktop em telas pequenas*/
+.mobile-button {
+  display: none;
+}
+.desktop-button {
+  display: block;
+}
+
+@media (max-width: 769px) {
+  .mobile-button {
+    display: block !important;
   }
-  50% {
-    transform: scale(1.03); /* Diminuí de 1.05 para 1.03 */
-    box-shadow: 0 0 25px rgba(255, 77, 79, 0.6), 0 0 50px rgba(255, 77, 79, 0.3);
-  }
-  100% {
-    transform: scale(1);
-    box-shadow: 0 0 15px rgba(255, 77, 79, 0.4), 0 0 30px rgba(255, 77, 79, 0.2);
+  .desktop-button {
+    display: none !important;
   }
 }
 
-/* Efeito de glow contínuo */
+
+/* Efeito de glow contínuo do botão */
 .futuristic-record-button::before {
   content: "";
   position: absolute;
@@ -73,16 +88,34 @@
   );
 }
 
-@keyframes rotate-glow {
-  0% {
-    transform: rotate(0deg);
+/* Estados do botão */
+.futuristic-record-button.recorded {
+  animation: pulse-ready 2s ease-in-out infinite;
+}
+
+.futuristic-record-button.sending {
+  animation: pulse-sending 1s ease-in-out infinite;
+}
+
+@keyframes pulse-ready {
+  0%, 100% { 
+    box-shadow: 0 0 15px rgba(82, 196, 26, 0.4), 0 0 30px rgba(82, 196, 26, 0.2);
   }
-  100% {
-    transform: rotate(360deg);
+  50% { 
+    box-shadow: 0 0 25px rgba(82, 196, 26, 0.6), 0 0 50px rgba(82, 196, 26, 0.4);
   }
 }
 
-/* Timer de gravação */
+@keyframes pulse-sending {
+  0%, 100% { 
+    box-shadow: 0 0 15px rgba(114, 46, 209, 0.4), 0 0 30px rgba(114, 46, 209, 0.2);
+  }
+  50% { 
+    box-shadow: 0 0 25px rgba(114, 46, 209, 0.6), 0 0 50px rgba(114, 46, 209, 0.4);
+  }
+}
+
+/* TIMER DE GRAVAÇÃO */
 .recording-timer {
   margin-top: 2rem;
   text-align: center;
@@ -108,7 +141,7 @@
 }
 
 
-/* Seção do robô */
+/* ESTILO DO ROBÔ */
 .robot-section {
   display: flex;
   flex-direction: column;
@@ -142,9 +175,31 @@
   margin: 1rem 0;
 }
 
+@keyframes pulse-recording {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 15px rgba(255, 77, 79, 0.4), 0 0 30px rgba(255, 77, 79, 0.2);
+  }
+  50% {
+    transform: scale(1.03); /* Diminuí de 1.05 para 1.03 */
+    box-shadow: 0 0 25px rgba(255, 77, 79, 0.6), 0 0 50px rgba(255, 77, 79, 0.3);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 15px rgba(255, 77, 79, 0.4), 0 0 30px rgba(255, 77, 79, 0.2);
+  }
+}
 
+@keyframes rotate-glow {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
 
-/* Visualizador de áudio */
+/* VISUALIZADOR DE ÁUDIO */
 .audio-visualization {
   display: flex;
   flex-direction: column;
@@ -186,35 +241,6 @@
 .status-text {
   color: rgba(255, 255, 255, 0.7);
   font-size: 0.9rem;
-}
-
-
-
-/* Estados do botão */
-.futuristic-record-button.recorded {
-  animation: pulse-ready 2s ease-in-out infinite;
-}
-
-.futuristic-record-button.sending {
-  animation: pulse-sending 1s ease-in-out infinite;
-}
-
-@keyframes pulse-ready {
-  0%, 100% { 
-    box-shadow: 0 0 15px rgba(82, 196, 26, 0.4), 0 0 30px rgba(82, 196, 26, 0.2);
-  }
-  50% { 
-    box-shadow: 0 0 25px rgba(82, 196, 26, 0.6), 0 0 50px rgba(82, 196, 26, 0.4);
-  }
-}
-
-@keyframes pulse-sending {
-  0%, 100% { 
-    box-shadow: 0 0 15px rgba(114, 46, 209, 0.4), 0 0 30px rgba(114, 46, 209, 0.2);
-  }
-  50% { 
-    box-shadow: 0 0 25px rgba(114, 46, 209, 0.6), 0 0 50px rgba(114, 46, 209, 0.4);
-  }
 }
 
 /* Status do áudio */
