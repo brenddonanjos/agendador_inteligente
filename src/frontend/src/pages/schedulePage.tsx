@@ -1,19 +1,26 @@
-import { Flex } from "antd";
+import { Divider, Flex } from "antd";
 import { useEffect, useRef, useState } from "react";
 import AudioRecorderButton from "../components/btnAudioRecorder";
 import { sendAudioToSchedule } from "../services/scheduleService";
 import { getAuthStatus, getAuthUrl } from "../services/googleAuthService";
 import { getCookie, setCookie } from "../utils/cookies";
 
+import type { ResponseSchedule } from "../interfaces/responseSchedule";
+import WarningCard from "../components/warningCard";
+import RobotArea from "../components/robotArea";
+import { AxiosError } from "axios";
+
 function SchedulePage() {
-  const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
   const [audioState, setAudioState] = useState<
     "idle" | "recording" | "recorded" | "sending"
   >("idle");
-
   const [audioURL, setAudioURL] = useState<string | null>(null);
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const [responseSchedule, setResponseSchedule] =
+    useState<ResponseSchedule | null>(null);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
@@ -27,25 +34,40 @@ function SchedulePage() {
     const checkGoogleAuth = async () => {
       try {
         const authStatus = await getAuthStatus(userSessionId);
-        if (!authStatus.authenticated) {
-          const url = await getAuthUrl(userSessionId);
-          window.open(
-            url.auth_url,
-            "google-auth",
-            "width=500,height=600,scrollbars=yes,resizable=yes"
-          );
-        }
+        setIsAuthenticated(authStatus.authenticated);
+
+        if (authStatus.authenticated) return;
+
+        const url = await getAuthUrl(userSessionId);
+        window.open(
+          url.auth_url,
+          "google-auth",
+          "width=500,height=600,scrollbars=yes,resizable=yes"
+        );
+
+        const checkAuthInterval = setInterval(async () => {
+          const authStatus = await getAuthStatus(userSessionId);
+          setIsAuthenticated(authStatus.authenticated);
+          if (authStatus.authenticated) {
+            clearInterval(checkAuthInterval);
+          }
+        }, 3000);
+
+        // Limpar interval após 5 minutos
+        setTimeout(() => {
+          console.log("Intervalo de 5 minutos expirado");
+          if (checkAuthInterval) clearInterval(checkAuthInterval);
+        }, 300000);
       } catch (error) {
         console.error("Erro ao verificar autenticação Google:", error);
       }
     };
     checkGoogleAuth();
-  }, []);
+  }, [isAuthenticated]);
 
   const startRecording = async () => {
+    setResponseSchedule(null);
     setAudioState("recording");
-    setIsRecording(true);
-
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
@@ -67,7 +89,6 @@ function SchedulePage() {
       };
 
       mediaRecorder.start();
-      setIsRecording(true);
     } catch (err) {
       console.error("Erro ao acessar microfone:", err);
       alert("Não foi possível acessar o microfone");
@@ -75,48 +96,72 @@ function SchedulePage() {
   };
 
   const stopRecording = () => {
+    setResponseSchedule(null);
     if (
-      !isRecording ||
+      audioState !== "recording" ||
       !mediaRecorderRef.current ||
       mediaRecorderRef.current.state == "inactive"
     )
       return;
 
     mediaRecorderRef.current.stop();
-    setIsRecording(false);
     setAudioState("recorded");
   };
 
   const sendAudio = async () => {
+    setResponseSchedule(null);
     if (!audioBlob) return;
     setAudioState("sending");
-    setIsRecording(false);
 
     try {
-      const response = await sendAudioToSchedule(audioBlob);
+      const userId = getCookie("user_id") || "user_default";
+      const response = await sendAudioToSchedule(userId, audioBlob);
       console.log("Resposta do servidor:", response);
       setAudioState("idle");
       setAudioURL(null);
       setAudioBlob(null);
+      setResponseSchedule({
+        success: true,
+        message: "Agendamento realizado com sucesso! ",
+        link: response.link,
+      });
     } catch (error) {
-      console.error("Erro ao enviar áudio:", error);
+      let messageError = "Falha ao tentar agendar seu compromisso";
+      if (error && error instanceof AxiosError) {
+        messageError = error.response?.data?.message || messageError;
+      }
+      console.log("Erro ao agendar evento:", messageError);
       setAudioState("recorded");
+      setResponseSchedule({
+        success: false,
+        message: messageError,
+        link: null,
+      });
     }
   };
 
   const cancelRecording = () => {
     setAudioState("idle");
-    setIsRecording(false);
     setRecordingTime(0);
     setAudioURL(null);
     setAudioBlob(null);
     mediaRecorderRef.current?.stop();
     mediaRecorderRef.current = null;
     chunksRef.current = [];
+    setResponseSchedule(null);
   };
 
   return (
-    <Flex wrap gap="small">
+    <Flex vertical align="center" justify="center" gap="small">
+      {!isAuthenticated && (
+        <WarningCard message="Login e Autorização Google necessários para continuar" />
+      )}
+      
+      <RobotArea
+        audioState={audioState}
+        responseSchedule={responseSchedule || undefined}
+      />
+      <Divider className="robot-divider" />
       <AudioRecorderButton
         onStartRecording={startRecording}
         onStopRecording={stopRecording}
@@ -125,7 +170,7 @@ function SchedulePage() {
         audioState={audioState}
         audioURL={audioURL}
         recordingTime={recordingTime}
-        isRecording={isRecording}
+        isAuthenticated={isAuthenticated}
       />
     </Flex>
   );

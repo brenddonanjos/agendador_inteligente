@@ -4,7 +4,7 @@ services:
       context: ./src/backend
       dockerfile: Dockerfile
     hostname: scheduler-backend
-    container_name: scheduler- backend
+    container_name: scheduler-backend
     ports:
       - 5000:5000
     networks:

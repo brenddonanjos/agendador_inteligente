@@ -5,6 +5,7 @@ from agents.stt_agent.agent import stt_agent
 from agents.npl_agent.agent import npl_agent
 from agents.suggestor_agent.agent import suggestor_agent
 from agents.scheduler_agent.agent import scheduler_agent
+from agents.normalizer_agent.agent import normalizer_agent
 from google.genai.types import Content, Part
 from google.adk.runners import InMemoryRunner
 
@@ -15,6 +16,7 @@ class AgentFlowService:
         self.npl_runner = InMemoryRunner(agent=npl_agent, app_name=APP_NAME)
         self.suggestor_runner = InMemoryRunner(agent=suggestor_agent, app_name=APP_NAME)
         self.scheduler_runner = InMemoryRunner(agent=scheduler_agent, app_name=APP_NAME)
+        self.normalizer_runner = InMemoryRunner(agent=normalizer_agent, app_name=APP_NAME)
 
     async def execute_stt(
         self, prompt: str, user_id: str, session: str
@@ -125,5 +127,30 @@ class AgentFlowService:
         if not response:
             return None, Exception("Falha no agendamento")
 
-        print(f"Agendamento: {response}")
+        print(f"Agendamento: {response}, user_id: {user_id}")
+        return response, None
+
+    async def execute_normalizer(
+        self, prompt: str, user_id: str, session: str
+    ) -> tuple[str, Exception]:
+        print("🔍 [5/5] Normalizando resposta...")
+        content_normalizer = Content(role="user", parts=[Part(text=prompt)])
+        session_id = f"{session}_normalizer"
+
+        await self.normalizer_runner.session_service.create_session(
+            app_name=APP_NAME, user_id=user_id, session_id=session_id
+        )
+
+        async for event in self.normalizer_runner.run_async(
+            user_id=user_id, session_id=session_id, new_message=content_normalizer
+        ):
+            if hasattr(event, "content") and event.content and event.content.parts:
+                for parte in event.content.parts:
+                    if hasattr(parte, "text") and parte.text:
+                        response = parte.text
+
+        if not response:
+            return None, Exception("Falha na normalização da resposta")
+
+        print(f"Resposta normalizada: {response}")
         return response, None

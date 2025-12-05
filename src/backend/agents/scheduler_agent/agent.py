@@ -41,9 +41,10 @@ scheduler_agent = Agent(
         Sua tarefa é:
         1. Analisar as informações do evento no JSON ou prompt
         2. Caso os dados estejam incompletos ou inválidos, solicitar as informações faltantes
-        3. Passar o objeto JSON inteiro, como argumento para a ferramenta. 
-        4. usa a ferramenta create_event para criar o evento
-        5. Retornar o link do evento criado ou erro caso não consiga criar o evento
+        3. Extraia o user_id do PROMPT, ele vai estar claro no inicio deste prompt = user_id: <string_do_id>.
+        4. Adicionar o user_id ao objeto JSON ("user_id": "string"). 
+        5. usa a ferramenta create_event para criar o evento
+        6. Retornar o link do evento criado ou erro caso não consiga criar o evento
     """,
     tools=[mcp_toolset],
 )

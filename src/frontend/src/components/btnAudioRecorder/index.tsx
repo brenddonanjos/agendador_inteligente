@@ -1,10 +1,9 @@
-import { Avatar, Button, Card, Divider, Typography } from "antd";
+import { Button, Divider } from "antd";
 import {
   AudioOutlined,
   CloseOutlined,
   LoadingOutlined,
   PauseOutlined,
-  RobotOutlined,
   SendOutlined,
 } from "@ant-design/icons";
 import "./style.css";
@@ -17,12 +16,12 @@ interface AudioRecorderButtonProps {
   audioState: "idle" | "recording" | "recorded" | "sending";
   audioURL: string | null;
   recordingTime: number;
-  isRecording: boolean;
+  isAuthenticated: boolean;
 }
 
 function AudioRecorderButton(props: AudioRecorderButtonProps) {
   const handleClick = () => {
-    if (props.isRecording) {
+    if (props.audioState === "recording") {
       props.onStopRecording();
     } else {
       props.onStartRecording();
@@ -76,41 +75,8 @@ function AudioRecorderButton(props: AudioRecorderButtonProps) {
   const sendButtonAttributes = getSendButtonAttributes();
   return (
     <div className="audio-recorder-container">
-      <div className="robot-section">
-        <h2>RobSom Agenda</h2>
-        <Avatar size={80} icon={<RobotOutlined />} className="robot-avatar" />
-        <Card className="robot-response-card" size="small">
-          <Typography.Text className="robot-text">
-            {props.isRecording
-              ? "Estou ouvindo..."
-              : "Olá! Eu sou o RobSom, me fale sobre seu compromisso, que eu irei agendar para você"}
-          </Typography.Text>
-        </Card>
-      </div>
-
-      <Divider className="robot-divider" />
-
       {!props.audioURL && (
         <>
-          <Button
-            type="primary"
-            shape="circle"
-            size="large"
-            onMouseDown={props.onStartRecording}
-            onMouseUp={props.onStopRecording}
-            onTouchStart={props.onStartRecording}
-            onTouchEnd={props.onStopRecording}
-            onMouseLeave={props.isRecording ? props.onStopRecording : undefined}
-            icon={recordButtonAttributes?.icon}
-            className={`futuristic-record-button mobile-button ${recordButtonAttributes?.className}`}
-            disabled={props.audioState === "sending"}
-            style={{
-              background: recordButtonAttributes?.background,
-              boxShadow: recordButtonAttributes?.boxShadow,
-              opacity: props.audioState === "sending" ? 0.8 : 1,
-            }}
-          ></Button>
-          <br />
           <Button
             type="primary"
             shape="circle"
@@ -118,7 +84,7 @@ function AudioRecorderButton(props: AudioRecorderButtonProps) {
             onClick={handleClick}
             icon={recordButtonAttributes?.icon}
             className={`futuristic-record-button desktop-button ${recordButtonAttributes?.className}`}
-            disabled={props.audioState === "sending"}
+            disabled={props.audioState === "sending" || !props.isAuthenticated}
             style={{
               background: recordButtonAttributes?.background,
               boxShadow: recordButtonAttributes?.boxShadow,
@@ -130,16 +96,13 @@ function AudioRecorderButton(props: AudioRecorderButtonProps) {
               <div
                 key={i}
                 className={`wave wave-${i} ${
-                  props.isRecording ? "active" : ""
+                  props.audioState === "recording" ? "active" : ""
                 }`}
               />
             ))}
           </div>
         </>
       )}
-
-      <br />
-
       {props.audioURL && (
         <>
           <div className="recorded-audio-buttons-container">
@@ -170,12 +133,12 @@ function AudioRecorderButton(props: AudioRecorderButtonProps) {
               }}
             ></Button>
           </div>
-
-          <br />
-          <h3>Áudio Gravado:</h3>
-          <audio controls src={props.audioURL} />
         </>
       )}
+      <div className={`audio-visualization ${!props.audioURL ? "hidden" : ""}`}>
+        <h3>Áudio Gravado:</h3>
+        <audio controls src={props.audioURL ?? undefined} />
+      </div>
     </div>
   );
 }

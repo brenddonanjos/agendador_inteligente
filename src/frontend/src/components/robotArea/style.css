@@ -1,0 +1,56 @@
+/* ESTILO DO ROBÔ */
+.robot-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2rem;
+  gap: 1rem;
+}
+
+.robot-avatar {
+  background: linear-gradient(135deg, #5d656d, #5d656d);
+  border: 3px solid #5d656d;
+  box-shadow: 0 0 20px rgba(19, 194, 194, 0.4);
+}
+
+.robot-response-card {
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(19, 194, 194, 0.3);
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  width: 350px;
+  height: 110px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.robot-response-card.success {
+  background: rgba(64, 153, 64, 0.401);
+  border: 1px solid rgba(1, 255, 1, 0.81);
+}
+
+.robot-response-card.error {
+  background: rgba(142, 50, 50, 0.515);
+  border: 1px solid rgba(255, 0, 0, 0.759);
+}
+
+.robot-response-card.warning {
+  background: rgba(183, 152, 58, 0.595);
+  border: 1px solid rgba(255, 169, 10, 0.93);
+}
+
+.robot-response-card.neutral {
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(19, 194, 194, 0.3);
+}
+.robot-text {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1rem;
+}
+
+.robot-divider {
+  border-color: rgba(19, 194, 194, 0.3);
+  margin: 1rem 0;
+}

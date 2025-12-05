@@ -2,10 +2,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   padding: 2rem;
-  min-height: 400px; /* Aumente um pouco para acomodar tudo */
-  /* Remove position: relative */
+  min-height: 300px; 
 }
 
 /* BOTÃO DE GRAVAÇÃO E ENVIO*/
@@ -41,24 +39,8 @@
 .recorded-audio-buttons-container {
   display: flex;
   gap: 2rem;
+  min-height: 6rem;
 }
-/* Esconder botão mobile em telas grandes e botão desktop em telas pequenas*/
-.mobile-button {
-  display: none;
-}
-.desktop-button {
-  display: block;
-}
-
-@media (max-width: 769px) {
-  .mobile-button {
-    display: block !important;
-  }
-  .desktop-button {
-    display: none !important;
-  }
-}
-
 
 /* Efeito de glow contínuo do botão */
 .futuristic-record-button::before {
@@ -68,15 +50,9 @@
   left: -2px;
   right: -2px;
   bottom: -2px;
-  background: linear-gradient(
-    45deg,
-    transparent,
-    rgba(19, 194, 194, 0.3),
-    transparent
-  );
+  background: transparent;
   border-radius: 50%;
   z-index: -1;
-  animation: rotate-glow 3s linear infinite;
 }
 
 .futuristic-record-button.recording::before {
@@ -86,6 +62,7 @@
     rgba(255, 77, 79, 0.3),
     transparent
   );
+  animation: rotate-glow 3s linear infinite;
 }
 
 /* Estados do botão */
@@ -98,20 +75,24 @@
 }
 
 @keyframes pulse-ready {
-  0%, 100% { 
+  0%,
+  100% {
     box-shadow: 0 0 15px rgba(82, 196, 26, 0.4), 0 0 30px rgba(82, 196, 26, 0.2);
   }
-  50% { 
+  50% {
     box-shadow: 0 0 25px rgba(82, 196, 26, 0.6), 0 0 50px rgba(82, 196, 26, 0.4);
   }
 }
 
 @keyframes pulse-sending {
-  0%, 100% { 
-    box-shadow: 0 0 15px rgba(114, 46, 209, 0.4), 0 0 30px rgba(114, 46, 209, 0.2);
+  0%,
+  100% {
+    box-shadow: 0 0 15px rgba(114, 46, 209, 0.4),
+      0 0 30px rgba(114, 46, 209, 0.2);
   }
-  50% { 
-    box-shadow: 0 0 25px rgba(114, 46, 209, 0.6), 0 0 50px rgba(114, 46, 209, 0.4);
+  50% {
+    box-shadow: 0 0 25px rgba(114, 46, 209, 0.6),
+      0 0 50px rgba(114, 46, 209, 0.4);
   }
 }
 
@@ -131,48 +112,19 @@
   border: 1px solid rgba(255, 77, 79, 0.3);
   backdrop-filter: blur(10px);
   animation: timer-pulse 1s infinite;
-  font-family: 'Courier New', monospace; /* Fonte digital */
+  font-family: "Courier New", monospace; /* Fonte digital */
 }
 
 @keyframes timer-pulse {
-  0% { opacity: 1; }
-  50% { opacity: 0.7; }
-  100% { opacity: 1; }
-}
-
-
-/* ESTILO DO ROBÔ */
-.robot-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 2rem;
-  gap: 1rem;
-}
-
-.robot-avatar {
-  background: linear-gradient(135deg, #5d656d, #5d656d);
-  border: 3px solid #5d656d;
-  box-shadow: 0 0 20px rgba(19, 194, 194, 0.4);
-}
-
-.robot-response-card {
-  background: rgba(0, 0, 0, 0.6);
-  border: 1px solid rgba(19, 194, 194, 0.3);
-  border-radius: 20px;
-  backdrop-filter: blur(10px);
-  max-width: 300px;
-  text-align: center;
-}
-
-.robot-text {
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 1rem;
-}
-
-.robot-divider {
-  border-color: rgba(19, 194, 194, 0.3);
-  margin: 1rem 0;
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 @keyframes pulse-recording {
@@ -204,8 +156,16 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 2rem;
+  min-height: 100px; 
+  margin-top: 1rem;
+}
+
+.audio-visualization.hidden {
+  visibility: hidden;
+}
+
+.audio-visualization h3 {
+  margin-bottom: 0.5rem;
 }
 
 .sound-waves {
@@ -218,7 +178,7 @@
 .wave {
   width: 4px;
   height: 10px;
-  background: linear-gradient(to top, #13C2C2, #1890ff);
+  background: linear-gradient(to top, #13c2c2, #1890ff);
   border-radius: 2px;
   transition: all 0.3s ease;
 }
@@ -227,15 +187,30 @@
   animation: wave-pulse 1s ease-in-out infinite;
 }
 
-.wave-1.active { animation-delay: 0s; }
-.wave-2.active { animation-delay: 0.1s; }
-.wave-3.active { animation-delay: 0.2s; }
-.wave-4.active { animation-delay: 0.3s; }
-.wave-5.active { animation-delay: 0.4s; }
+.wave-1.active {
+  animation-delay: 0s;
+}
+.wave-2.active {
+  animation-delay: 0.1s;
+}
+.wave-3.active {
+  animation-delay: 0.2s;
+}
+.wave-4.active {
+  animation-delay: 0.3s;
+}
+.wave-5.active {
+  animation-delay: 0.4s;
+}
 
 @keyframes wave-pulse {
-  0%, 100% { height: 10px; }
-  50% { height: 30px; }
+  0%,
+  100% {
+    height: 10px;
+  }
+  50% {
+    height: 30px;
+  }
 }
 
 .status-text {
